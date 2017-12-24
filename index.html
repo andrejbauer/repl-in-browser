@@ -1,0 +1,82 @@
+<!doctype html>
+
+<title>REPL in the browser</title>
+<meta charset="utf-8"/>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.min.js" integrity="sha256-ag7KgA1S7cuuU2FCC2G7/L8IpaijDSPqzcLLLeJv5Iw=" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.min.css" integrity="sha256-I8NyGs4wjbMuBSUE40o55W6k6P7tu/7G28/JGUUYCIs=" crossorigin="anonymous" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/theme/monokai.min.css" integrity="sha256-6ov3WWd9ybfZPeJBlXBgQuD/aLhTRCEp5kBhqD9ke0o=" crossorigin="anonymous" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/mode/mllike/mllike.min.js" integrity="sha256-BOCKMndg6/AI2iWczANGB1/QIky96Pzxaj9l2yKKfkY=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/addon/edit/matchbrackets.min.js" integrity="sha256-BzzUspurJPtHi1Ux5geUVUtDLQDqDeUu9SMkOrsShUY=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/addon/edit/closebrackets.min.js" integrity="sha256-ckZJSSEwRjAtCl8YzZuhIqHYq+Bt+Csy3keSLdp8uxA=" crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/1.11.0/css/jquery.terminal.min.css" integrity="sha256-NPnczI0KjCueVIbIZBIjffajQholjsUnhVe4sQgL80U=" crossorigin="anonymous" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/1.11.0/js/jquery.terminal.min.js" integrity="sha256-Qm1Nw4js01hUsHFCa8xirKnSZeRXR8uNgbAKwjhn9mA=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js" integrity="sha256-0SGl1PJNDyJwcV5T+weg2zpEMrh7xvlwO4oXgvZCeZk=" crossorigin="anonymous"></script>
+
+<script src="./repl.js"></script>
+
+<style>
+  .CodeMirror { height: 400px; border: 1px solid #ddd; }
+  .CodeMirror-scroll { max-height: 500px; }
+  .CodeMirror pre { padding-left: 7px; line-height: 1.25; }
+</style>
+
+<div id=nav>
+  <h1>REPL in the browser</h1>
+</div>
+
+<article>
+
+<section id=editor>
+  <h2>The Editor</h2>
+  <textarea id="sourcecode">(Your language here)</textarea>
+  <script>
+    var editor = CodeMirror.fromTextArea(document.getElementById("sourcecode"), {
+      lineNumbers: true,
+      matchBrackets: true
+    });
+  </script>
+  <button type="button" id="runButton">Run!</button>
+</section>
+
+<section id="repl">
+  <h2>The REPL</h2>
+
+  <div id="terminal">here be terminal</div>
+
+  <script>
+   $('#runButton').click(function () { terminal.echo(editor.getValue()); }) ;
+
+   var terminal =
+    $('#terminal').terminal(function(command, term) {
+        if (command !== '') {
+            var result =
+              repl.toplevel()(command)(function (x) { term.echo("We got " + String(x))});
+            if (result != undefined) {
+                this.echo(String(result));
+            }
+        }
+    }, {
+        greetings: 'Language demo',
+        name: 'language_demo',
+        height: 200,
+        width: 450,
+        prompt: '# '
+    });
+  </script>
+</section>
+
+
+</article>
