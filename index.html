@@ -57,13 +57,11 @@
   <div id="terminal">here be terminal</div>
 
   <script>
-   $('#runButton').click(function () { terminal.echo(editor.getValue()); }) ;
-
    var terminal =
     $('#terminal').terminal(function(command, term) {
         if (command !== '') {
             var result =
-              repl.toplevel()(command)(function (x) { term.echo("We got " + String(x))});
+              repl.toplevel()(command)(function (msg) { term.echo(msg) });
             if (result != undefined) {
                 this.echo(String(result));
             }
@@ -75,6 +73,10 @@
         width: 450,
         prompt: '# '
     });
+
+   $('#runButton').click(function () {
+      repl.commands(editor.getValue())(function (msg) { terminal.echo(msg) });
+   });
   </script>
 </section>
 
