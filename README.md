@@ -27,7 +27,7 @@ To compile the Javascript version of the language type
 To test the implementation simply visit [`index.html`](./index.html) (after you've
 compiled [`repl.js`](./repl.js)). You can also start a local server with
 
-   make serve
+    make serve
 
 and visit http://localhost:8000/
 
