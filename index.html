@@ -110,7 +110,7 @@ six := times two three ;
          var env = repl.reset()(terminal.echo);
 
          $('#runButton').click(function () {
-            repl.usefile()(terminal.echo)(env)(editor.getValue());
+            env = repl.usefile()(terminal.echo)(env)(editor.getValue());
          });
 
          $('#resetButton').click(function () {
