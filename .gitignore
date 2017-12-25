@@ -1,1 +1,3 @@
 _build
+/lambda.native
+/repl.js

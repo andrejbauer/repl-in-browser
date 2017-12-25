@@ -1,15 +1,25 @@
 PYTHON ?= python3
 PORT ?= 8000
 
-.PHONY: serve clean js
+JSFLAGS = -use-menhir -menhir "menhir --explain" -use-ocamlfind -plugin-tag "package(js_of_ocaml.ocamlbuild)"
+FLAGS = $(JSFLAGS) -libs unix
+OCAMLBUILD ?= ocamlbuild
 
-default: build
+.PHONY: serve clean repl.js lambda.native
 
-serve: js
+default: repl.js
+
+_build/repl.js:
+	$(OCAMLBUILD) $(JSFLAGS) src/repl.js
+
+lambda.native:
+	$(OCAMLBUILD) $(FLAGS) src/lambda.native
+
+repl.js: _build/repl.js
+	ln -fs _build/src/repl.js .
+
+serve: repl.js
 	python3 -m http.server $(PORT)
 
-js:
-	ocamlbuild -use-ocamlfind -cflags -linkpkg -plugin-tag "package(js_of_ocaml.ocamlbuild)" src/repl.js
-
 clean:
-	ocamlbuild -clean
+	$(OCAMLBUILD) -clean
